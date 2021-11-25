@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-server-service
+spec:
+  selector:
+    app: product-server
+  ports:
+    - protocol: "TCP"
+      # Port accessible inside cluster
+      port: 8081
+      # Port to forward to inside the pod
+      targetPort: 9999
+      # Port accessible outside cluster
+      nodePort: 30002
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-server
+spec:
+  selector:
+    matchLabels:
+      app: product-server
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: product-server
+    spec:
+      containers:
+        - name: product-server
+          image: dexter1a6/product-server:latest
+          ports:
+            - containerPort: 9999
