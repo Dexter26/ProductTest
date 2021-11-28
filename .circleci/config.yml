@@ -32,6 +32,9 @@ jobs:
       executor: docker-env
       steps:
         - checkout
+        - run:
+            name: Maven build
+            command: mvn -B -DskipTests clean package
         - setup_remote_docker
         - run: pwd
         - run: ls -ltr docker-product-server/
