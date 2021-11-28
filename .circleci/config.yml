@@ -34,7 +34,7 @@ jobs:
         - checkout
         - setup_remote_docker
         - run: pwd
-        - run: ls
+        - run: ls -ltr docker-product-server/
         - run:
             name: Build Docker image
             command: docker build -t $IMAGE_NAME:latest ./docker-product-server/
