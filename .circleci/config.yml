@@ -27,9 +27,9 @@ jobs:
             name: Test
             command: mvn test
         - persist_to_workspace:
-            root: ./docker-product-server/target
+            root: ./docker-product-server
             paths:
-              - docker-product-server-1.0.0.jar
+              - /target/docker-product-server-1.0.0.jar
               - Dockerfile
 
     docker-build:
