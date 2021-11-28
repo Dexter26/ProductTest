@@ -2,7 +2,7 @@ version: 2.1
 executors:
   docker-env:
     environment:
-      IMAGE_NAME: dexter1a6/product-server:$CIRCLE_BRANCH.$CIRCLE_BUILD_NUM
+      IMAGE_NAME: dexter1a6/product-server:$CIRCLE_BRANCH.<< pipeline.number >>
     docker:
       - image: cimg/openjdk:8.0
 
