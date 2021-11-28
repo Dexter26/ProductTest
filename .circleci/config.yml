@@ -29,7 +29,7 @@ jobs:
         - persist_to_workspace:
             root: ./docker-product-server
             paths:
-              - /target/docker-product-server-1.0.0.jar
+              - ./target/docker-product-server-1.0.0.jar
               - Dockerfile
 
     docker-build:
