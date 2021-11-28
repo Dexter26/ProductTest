@@ -48,7 +48,7 @@ jobs:
             #command: docker build -t $IMAGE_NAME:latest . -f /docker-product-server/Dockerfile ...
         - run:
             name: Archive Docker image
-            command: docker save -o image.tar $IMAGE_NAME
+            command: docker save -o image.tar $IMAGE_NAME:$CIRCLE_BRANCH.$CIRCLE_BUILD_NUM
         - persist_to_workspace:
             root: .
             paths:
