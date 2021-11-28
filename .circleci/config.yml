@@ -15,8 +15,6 @@ jobs:
     # Be sure to update the Docker image tag below to openjdk version of your application.
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/openjdk
       executor: docker-env
-      working_directory: /app
-
 
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
@@ -64,7 +62,7 @@ jobs:
         - setup_remote_docker
         - run:
             name: Load archived Docker image
-            command: docker load -i /tmp/workspace/app/image.tar
+            command: docker load -i /tmp/workspace/image.tar
         - run:
             name: Publish Docker Image to Docker Hub
             command: |
