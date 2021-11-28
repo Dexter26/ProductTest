@@ -38,7 +38,7 @@ jobs:
         - run: pwd
         - run:
             name: Build Docker image
-            command: docker build -f Dockerfile -t $IMAGE_NAME:latest ./docker-product-server/
+            command: docker build -t $IMAGE_NAME:latest ./docker-product-server/
         - run:
             name: Archive Docker image
             command: docker save -o image.tar $IMAGE_NAME
