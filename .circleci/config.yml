@@ -30,21 +30,21 @@ jobs:
             root: ./docker-product-server/target
             paths:
               - docker-product-server-1.0.0.jar
+              - Dockerfile
 
     docker-build:
 
       executor: docker-env
       steps:
-        - checkout
-        - run:
-            name: Maven build
-            command: mvn -B -DskipTests clean package
+        - attach_workspace:
+            at: /tmp/workspace
+
         - setup_remote_docker
         - run: pwd
-        - run: ls -ltr docker-product-server/
+        - run: ls -ltr /tmp/workspace
         - run:
             name: Build Docker image
-            command: docker build -t $IMAGE_NAME:latest ./docker-product-server/
+            command: docker build -t $IMAGE_NAME:latest /tmp/workspace
             #command: docker build -t $IMAGE_NAME:latest . -f /docker-product-server/Dockerfile ...
         - run:
             name: Archive Docker image
