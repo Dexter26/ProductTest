@@ -30,13 +30,15 @@ jobs:
     docker-build:
 
       executor: docker-env
-      working_directory: ./docker-product-server/
+      working_directory: 
 
       steps:
         - checkout
         - setup_remote_docker
         - run: ls
+        - run: cd docker-product-server/
         - run: pwd
+        - run: ls
         - run:
             name: Build Docker image
             command: docker build -t $IMAGE_NAME:latest .
