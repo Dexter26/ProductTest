@@ -1,3 +1,1 @@
-## Relevant Articles:
-
-- [Dockerizing a Spring Boot Application](https://www.baeldung.com/dockerizing-spring-boot-application)
+E2E deployment with docker container building on CircleCI with local minikube kubernetes deployment
