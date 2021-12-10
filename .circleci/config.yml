@@ -1,0 +1,103 @@
+version: 2.1
+executors:
+  docker-env:
+    environment:
+      IMAGE_NAME: dexter1a6/product-server
+    docker:
+      - image: cimg/openjdk:8.0
+
+
+jobs:
+
+    build-and-test:
+    # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
+    # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # Be sure to update the Docker image tag below to openjdk version of your application.
+    # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/openjdk
+      executor: docker-env
+
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      steps:
+        - checkout
+        - run:
+            name: Maven build
+            command: mvn -B -DskipTests clean package
+        - run:
+            name: Test
+            command: mvn test
+        - persist_to_workspace:
+            root: ./docker-product-server
+            paths:
+              - ./target/docker-product-server-1.0.0.jar
+              - Dockerfile
+
+    docker-build:
+
+      executor: docker-env
+      steps:
+        - attach_workspace:
+            at: /tmp/workspace
+
+        - setup_remote_docker
+        - run: pwd
+        - run: ls -ltr /tmp/workspace
+        - run:
+            name: Build Docker image
+            command: docker build -t $IMAGE_NAME:$CIRCLE_BRANCH.<< pipeline.number >> /tmp/workspace
+            #command: docker build -t $IMAGE_NAME:latest . -f /docker-product-server/Dockerfile ...
+        - run:
+            name: Archive Docker image
+            command: docker save -o image.tar $IMAGE_NAME:$CIRCLE_BRANCH.<< pipeline.number >>
+        - persist_to_workspace:
+            root: .
+            paths:
+              - ./image.tar
+
+
+    publish-latest:
+
+      executor: docker-env
+
+      steps:
+        - attach_workspace:
+            at: /tmp/workspace
+        - setup_remote_docker
+        - run: echo "publish"
+        - run: ls
+        - run:
+            name: Load archived Docker image
+            command: docker load -i /tmp/workspace/image.tar
+        - run:
+            name: Publish Docker Image to Docker Hub
+            command: |
+              docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASS"
+              docker push $IMAGE_NAME:$CIRCLE_BRANCH.<< pipeline.number >>
+
+
+workflows:
+  version: 2.1
+  build-master:
+    jobs:
+
+      - build-and-test:
+          filters:
+            branches:
+              only: 
+                - /release.*/
+
+      - docker-build:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: 
+                - /release.*/
+
+      - publish-latest:
+          requires:
+            - docker-build
+          filters:
+            branches:
+              only: 
+                - /release.*/
