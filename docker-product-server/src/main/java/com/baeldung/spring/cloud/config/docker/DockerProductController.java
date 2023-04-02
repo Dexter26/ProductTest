@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class DockerProductController {
     @GetMapping("/products")
     public String getMessage() {
-        return "A brand new product with completed Kubernetes code change flow - 43";
+        return "A brand new product with completed Kubernetes code change flow - 44";
     }
 }
